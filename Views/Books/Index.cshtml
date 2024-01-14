@@ -1,0 +1,89 @@
+﻿@model List<LibWEB.ViewModel.BookViewModel>
+@{
+    ViewData["Title"] = "Главная";
+}
+
+@{
+    bool editIconDisplayed; 
+}
+
+@if (Model != null && Model.Any())
+{
+    <div class="row">
+        @foreach (var book in Model)
+        {
+            editIconDisplayed = false;
+            <div class="col-md-4 col-xs-6 border-primary mb-3">
+                <div class="card mb-3" style="max-width: 540px;">
+                    <div class="row g-0">
+                        <div class="col-md-12">
+                            <div class="card-header text-white bg-info">
+                                <p class="card-text">
+                                    <h5 class="card-title">
+                                        @book.Title (@book.AgeRestriction+)
+                                        @if (!editIconDisplayed)
+                                        {
+                                            <a class="text-white float-right" asp-action="Update" asp-route-id="@book.Id">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </a>
+                                            editIconDisplayed = true;
+                                        }
+                                    </h5>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <img src="@book.GetImageUrl()" alt="@book.Title" height=300px/>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card-body">
+                                <p class="card-text">
+                                    <b>Автор(ы): </b>
+                                    @if (book.SelectedAuthors != null)
+                                    {
+                                        foreach (var author in book.SelectedAuthors)
+                                        {
+                                            <text>@author.Name @author.Patronymic @author.Surname</text>
+                                            if (!ReferenceEquals(author, book.SelectedAuthors.Last()))
+                                            {
+                                                <text>, </text>
+                                            }
+                                        }
+                                    }
+                                </p>
+                                <p class="card-text">
+                                    <b>Жанры: </b>
+                                    @if (book.SelectedGenres != null)
+                                    {
+                                        @string.Join(", ", book.SelectedGenres)
+                                    }
+                                </p>
+                                <p class="card-text"><b>В наличии: </b>@book.Numbers</p>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="card-footer ">
+                                <p class="card-text">
+                                    <a class="btn btn-outline-primary float-right" asp-action="Details" asp-route-id="@book.Id">
+                                        <i class="bi bi-eye-fill"></i> Подробнее...
+                                    </a>
+                                    <a class="btn btn-success text-white"
+                                       asp-controller="PreordersController"
+                                       asp-action="PreorderBook"
+                                       asp-route-id="@book.Id">
+                                        Отложить
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <p>Нет доступных книг</p>
+}
+

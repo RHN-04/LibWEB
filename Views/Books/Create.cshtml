@@ -1,0 +1,99 @@
+﻿@model LibWEB.ViewModel.CreateBookViewModel
+@{
+    ViewData["Title"] = "Добавить книгу...";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script>
+    jQuery(document).ready(function ($) {
+        $('.js-select2').select2();
+        function addNewGenre() {
+            var newGenreInput = $('#NewGenre');
+            var newGenreValue = newGenreInput.val().trim();
+
+            if (newGenreValue !== '') {
+                var genresSelect = $('.js-select2');
+                genresSelect.append(new Option(newGenreValue, newGenreValue, true, true));
+                genresSelect.trigger('change');
+                newGenreInput.val('');
+            }
+        }
+    });
+</script>
+
+<form asp-controller="Books" asp-action="Create" method="post" enctype="multipart/form-data">
+    <div class="inputs">
+        <div class="text-danger">
+            <span asp-validation-for="Title"></span>
+        </div>
+        <label>Название<span class="req">*</span></label>
+        <input asp-for="Title" />
+        <br />
+
+        <div class="text-danger">
+            <span asp-validation-for="AgeRestriction"></span>
+        </div>
+        <label>Возрастное ограничение<span class="req">*</span></label>
+        <select asp-for="AgeRestriction" asp-items="Model.AgeRestrictionOptions"></select>
+        <br />
+
+        <div class="text-danger">
+            <span asp-validation-for="YearOfPublishing"></span>
+        </div>
+        <label>Год издания<span class="req">*</span></label>
+        <input asp-for="YearOfPublishing" type="text" />
+        <br />
+
+        <div class="text-danger">
+            <span asp-validation-for="Description"></span>
+        </div>
+        <label>Краткое описание<span class="req">*</span></label>
+        <textarea asp-for="Description"></textarea>
+        <br />
+
+        <div class="text-danger">
+            <span asp-validation-for="Numbers"></span>
+        </div>
+        <label>Количество<span class="req">*</span></label>
+        <input asp-for="Numbers" type="text" />
+        <br />
+
+        <label asp-for="SelectedAuthorIds">Автор(ы):</label>
+        <select asp-for="SelectedAuthorIds" asp-items="@Model.Authors.Select(a => new SelectListItem { Value = a.Id.ToString(), Text = $"{a.Surname} {a.Name} {a.Patronymic}".Trim() })" multiple class="js-select2">
+        </select>
+        <br />
+
+        <div>
+            <label for="NewGenre">Новый жанр:</label>
+            <input type="text" id="NewGenre" name="NewGenre" />
+            <button type="button" onclick="addNewGenre()">Добавить</button>
+        </div>
+
+        <div class="text-danger">
+            <span asp-validation-for="Genres"></span>
+        </div>
+        <label asp-for="SelectedGenreIds">Жанр(ы):</label>
+        <select asp-for="SelectedGenreIds" multiple class="js-select2">
+            @foreach (var genre in Model.Genres)
+            {
+                <option value="@genre.Id">@genre.NameGenre</option>
+            }
+        </select>
+        <br />
+
+        <div class="text-danger">
+            <span asp-validation-for="ImageFile"></span>
+        </div>
+        <label asp-for="ImageFile">Изображение:</label>
+        <input type="file" asp-for="ImageFile" />
+        <br />
+
+        <label for="AuthorCreation">Нет нужного автора?</label>
+        <a asp-controller="Authors" asp-action="Create" class="btn btn-link">Добавить нового автора</a>
+        <br />
+    <button type="submit">Сохранить</button>
+    </div>
+</form>

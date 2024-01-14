@@ -1,0 +1,78 @@
+﻿@{
+    ViewData["Title"] = "Главная";
+}
+@model LibWEB.ViewModel.BookViewModel
+
+<div class="row">
+    <div class="col-md-8 offset-2">
+        <div class="card mb-12">
+            <div class="row g-0">
+                <div class="col-md-12">
+                    <div class="card-header text-white bg-info">
+                        <p class="card-text">
+                            <h5 class="card-title">
+                                @Model.Title
+                            </h5>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <img src="~/@Model.GetImageUrl()" alt="@Model.Title" height=400px/>
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <p class="card-text">
+                            <b>Название: </b> @Model.Title
+                        </p>
+                        <p class="card-text">
+                            <b>Автор(ы): </b>
+                            @if (Model.SelectedAuthors != null && Model.SelectedAuthors.Any())
+                            {
+                                @string.Join(", ", Model.SelectedAuthors.Select(author => $"{author.Name} {author.Patronymic} {author.Surname}"))
+                            }
+                        </p>
+
+                        <p class="card-text">
+                            <b>Жанры: </b>
+                            @if (Model.SelectedGenres != null && Model.SelectedGenres.Any())
+                            {
+                                @string.Join(", ", Model.SelectedGenres)
+                            }
+                        </p>
+
+                        <p class="card-text"><b>Описание: </b>@Model.Description</p>
+                        <p class="card-text"><b>Возрастное ограничение: </b>@Model.AgeRestriction+</p>
+                        <p class="card-text"><b>Год издания: </b>@Model.YearOfPublishing</p>
+                        <p class="card-text"><b>В наличии: </b>@Model.Numbers</p>
+                        <p class="card-text ">
+                            <b>Доступность: </b>
+                            @if (Model.Numbers >= 0)
+                            {
+                                <span class="badge bg-success text-white">В НАЛИЧИИ</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger text-white">НЕДОСТУПНА</span>
+                            }
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="card-footer">
+                        <p class="card-text">
+                            <a class="btn btn-outline-primary float-right" asp-action="Index">
+                                Вернуться на главную
+                            </a>
+                            <a class="btn btn-success text-white"
+                               asp-controller="PreordersController"
+                               asp-action="PreorderBook"
+                               asp-route-id="@Model.Id">
+                                Отложить
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

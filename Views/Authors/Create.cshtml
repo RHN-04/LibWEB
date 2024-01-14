@@ -1,0 +1,65 @@
+﻿@model LibWEB.ViewModel.CreateAuthorViewModel
+@{
+    ViewData["Title"] = "Добавить автора...";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<form asp-controller="Authors" asp-action="Create" method="post">
+    <div>
+        <div class="text-danger">
+            <span asp-validation-for="Name"></span>
+        </div>
+        <label>Имя автора<span class="req">*</span></label>
+        <input asp-for="Name" />
+    </div>
+
+    <div>
+        <div class="text-danger">
+            <span asp-validation-for="Surname"></span>
+        </div>
+        <label>Фамилия автора<span class="req">*</span></label>
+        <input asp-for="Surname" />
+    </div>
+
+    <div>
+        <label>Отчество автора</label>
+        <input asp-for="Patronymic" />
+    </div>
+
+    <div>
+        <div class="text-danger">
+            <span asp-validation-for="Country"></span>
+        </div>
+        <label>Страна рождения<span class="req">*</span></label>
+
+        @if (Model.Countries != null && Model.Countries.Any())
+        {
+            <select asp-for="Country" asp-items="Model.Countries.Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.CountryName })">
+                <option value="">Выберите страну</option>
+            </select>
+        }
+        else
+        {
+            <span>Нет доступных стран</span>
+        }
+
+        <label>Новая страна</label>
+        <input asp-for="NewCountry" />
+        <button type="button" onclick="addNewCountry()">Добавить</button>
+    </div>
+
+    <button type="submit">Добавить автора</button>
+</form>
+
+<script>
+    function addNewCountry() {
+        var newCountryInput = document.querySelector('[name="NewCountry"]');
+        var newCountryValue = newCountryInput.value.trim();
+
+        if (newCountryValue !== '') {
+            var countriesSelect = document.querySelector('[name="CountryId"]');
+            countriesSelect.innerHTML += `<option value="-1">${newCountryValue}</option>`;
+            newCountryInput.value = '';
+        }
+    }
+</script>

@@ -1,0 +1,115 @@
+﻿@model LibWEB.ViewModel.UpdateBookViewModel
+@{
+    ViewData["Title"] = "Редактировать книгу...";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.10.2/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<form asp-controller="Books" asp-action="Update" method="post" enctype="multipart/form-data">
+    <div class="inputs">
+        <input type="hidden" asp-for="Id" />
+        <div class="text-danger">
+            <span asp-validation-for="Title"></span>
+        </div>
+        <label>Название</label>
+        <input asp-for="Title" />
+        <br />
+
+        <div class="text-danger">
+            <span asp-validation-for="AgeRestriction"></span>
+        </div>
+        <label>Возрастное ограничение</label>
+        <select asp-for="AgeRestriction" asp-items="Model.AgeRestrictionOptions"></select>
+        <br />
+
+        <div class="text-danger">
+            <span asp-validation-for="YearOfPublishing"></span>
+        </div>
+        <label>Год издания</label>
+        <input asp-for="YearOfPublishing" type="text" />
+        <br />
+
+        <div class="text-danger">
+            <span asp-validation-for="Description"></span>
+        </div>
+        <label>Краткое описание</label>
+        <textarea asp-for="Description"></textarea>
+        <br />
+
+        <div class="text-danger">
+            <span asp-validation-for="Numbers"></span>
+        </div>
+        <label>Количество</label>
+        <input asp-for="Numbers" type="text" />
+        <br />
+
+        <label asp-for="SelectedAuthorIds">Автор(ы):</label>
+        <select asp-for="SelectedAuthorIds" asp-items="@Model.Authors?.Select(a => new SelectListItem { Value = a.Id.ToString(), Text = $"{a.Surname} {a.Name} {a.Patronymic}".Trim() })" multiple class="js-select2">
+        </select>
+        <br />
+
+        <div class="text-danger">
+            <span asp-validation-for="Genres"></span>
+        </div>
+        <label asp-for="SelectedGenreIds">Жанр(ы):</label>
+        <select asp-for="SelectedGenreIds" multiple class="js-select2">
+            @if (Model.Genres != null)
+            {
+                foreach (var genre in Model.Genres)
+                {
+                    <option value="@genre.Id">@genre.NameGenre</option>
+                }
+            }
+        </select>
+
+        <br />
+
+        <div class="text-danger">
+            <span asp-validation-for="ImageFile"></span>
+        </div>
+        <label asp-for="ImageFile">Изображение:</label>
+        <input type="file" asp-for="ImageFile" />
+        <br />
+
+        <label for="AuthorCreation">Нет нужного автора?</label>
+        <a asp-controller="Authors" asp-action="Create" class="btn btn-link">Добавить нового автора</a>
+        <br />
+        <div class="buttons" style="margin-bottom: 50px">
+            <button type="submit">Сохранить</button>
+
+            <a asp-controller="Books" asp-action="Index" class="btn btn-link">Отменить</a>
+
+            <button type="button" data-toggle="modal" data-target="#deleteModal">Удалить</button>
+        </div>
+    </div>
+</form>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Подтверждение удаления</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Вы уверены, что хотите удалить эту книгу?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                <form asp-controller="Books" asp-action="Delete" asp-route-id="@Model.Id" method="post">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-danger">Удалить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
