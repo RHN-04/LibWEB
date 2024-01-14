@@ -1,0 +1,52 @@
+﻿@model LibWEB.ViewModel.RegisterViewModel
+
+<h1>Регистрация</h1>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-controller="Account" asp-action="Register" method="post">
+            <div class="text-danger">
+                <span asp-validation-for="Surname"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Surname">Фамилия</label>
+                <input asp-for="Surname" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Name">Имя</label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Patronymic">Отчество</label>
+                <input asp-for="Patronymic" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="DateOfBirth"></label>
+                <input asp-for="DateOfBirth" class="form-control" type="text" />
+                <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                <small class="text-muted">Введите дату рождения в формате ДД.ММ.ГГГГ</small>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password">Придумайте пароль</label>
+                <input asp-for="Password" class="form-control" type="password" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+                <small class="text-muted">
+                    Пароль должен содержать хотя бы один неалфавитный символ, хотя бы одну цифру и хотя бы одну заглавную букву.
+                </small>
+            </div>
+            <div class="form-group">
+                <label asp-for="ConfirmPassword">Повторите пароль</label>
+                <input asp-for="ConfirmPassword" class="form-control" type="password" />
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+        </form>
+    </div>
+</div>
+

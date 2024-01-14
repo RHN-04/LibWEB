@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using LibWEB.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace LibWEB.Data
 {
-    public partial class LibContext : DbContext
+    public partial class LibContext : IdentityDbContext<ApplicationUser>
     {
         public LibContext()
         {
@@ -20,7 +22,6 @@ namespace LibWEB.Data
         public virtual DbSet<Author> Authors { get; set; } = null!;
         public virtual DbSet<AuthorPrintPublishing> AuthorPrintPublishings { get; set; } = null!;
         public virtual DbSet<Country> Countries { get; set; } = null!;
-        public virtual DbSet<Efmigrationshistory> Efmigrationshistories { get; set; } = null!;
         public virtual DbSet<Genre> Genres { get; set; } = null!;
         public virtual DbSet<GenrePrintPublishing> GenrePrintPublishings { get; set; } = null!;
         public virtual DbSet<Giving> Givings { get; set; } = null!;
@@ -36,10 +37,19 @@ namespace LibWEB.Data
             }
         }
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.UseCollation("utf8mb4_0900_ai_ci")
                 .HasCharSet("utf8mb4");
+
+            modelBuilder.Entity<ApplicationUser>().ToTable("AspNetUsers").HasKey(u => u.Id);
+            modelBuilder.Entity<IdentityRole>().ToTable("AspNetRoles").HasKey(r => r.Id);
+            modelBuilder.Entity<IdentityUserRole<string>>().ToTable("AspNetUserRoles").HasKey(ur => new { ur.UserId, ur.RoleId });
+            modelBuilder.Entity<IdentityUserClaim<string>>().ToTable("AspNetUserClaims").HasKey(uc => uc.Id);
+            modelBuilder.Entity<IdentityUserLogin<string>>().ToTable("AspNetUserLogins").HasKey(ul => new { ul.LoginProvider, ul.ProviderKey, ul.UserId });
+            modelBuilder.Entity<IdentityRoleClaim<string>>().ToTable("AspNetRoleClaims").HasKey(rc => rc.Id);
+            modelBuilder.Entity<IdentityUserToken<string>>().ToTable("AspNetUserTokens").HasKey(ut => new { ut.UserId, ut.LoginProvider, ut.Name });
 
             modelBuilder.Entity<Author>(entity =>
             {
@@ -105,18 +115,6 @@ namespace LibWEB.Data
                 entity.Property(e => e.CountryName)
                     .HasMaxLength(255)
                     .HasColumnName("country_name");
-            });
-
-            modelBuilder.Entity<Efmigrationshistory>(entity =>
-            {
-                entity.HasKey(e => e.MigrationId)
-                    .HasName("PRIMARY");
-
-                entity.ToTable("__efmigrationshistory");
-
-                entity.Property(e => e.MigrationId).HasMaxLength(150);
-
-                entity.Property(e => e.ProductVersion).HasMaxLength(32);
             });
 
             modelBuilder.Entity<Genre>(entity =>

@@ -15,7 +15,7 @@ namespace LibWEB.Models
         public string Surname { get; set; } = null!;
         public string Name { get; set; } = null!;
         public string? Patronymic { get; set; }
-        public DateOnly DateOfBirth { get; set; }
+        public DateTime DateOfBirth { get; set; }
         public string EmailAddress { get; set; } = null!;
 
         public virtual ICollection<Giving> Givings { get; set; }

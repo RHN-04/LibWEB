@@ -11,6 +11,22 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.10.2/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    jQuery(document).ready(function ($) {
+        $('.js-select2').select2();
+        function addNewGenre() {
+            var newGenreInput = $('#NewGenre');
+            var newGenreValue = newGenreInput.val().trim();
+
+            if (newGenreValue !== '') {
+                var genresSelect = $('.js-select2');
+                genresSelect.append(new Option(newGenreValue, newGenreValue, true, true));
+                genresSelect.trigger('change');
+                newGenreInput.val('');
+            }
+        }
+    });
+</script>
 
 <form asp-controller="Books" asp-action="Update" method="post" enctype="multipart/form-data">
     <div class="inputs">

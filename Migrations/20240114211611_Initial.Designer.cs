@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LibWEB.Migrations
 {
     [DbContext(typeof(LibContext))]
-    [Migration("20240107134835_ManyToMany")]
-    partial class ManyToMany
+    [Migration("20240114211611_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,21 +24,70 @@ namespace LibWEB.Migrations
 
             MySqlModelBuilderExtensions.HasCharSet(modelBuilder, "utf8mb4");
 
-            modelBuilder.Entity("LibWEB.Efmigrationshistory", b =>
+            modelBuilder.Entity("LibWEB.Models.ApplicationUser", b =>
                 {
-                    b.Property<string>("MigrationId")
-                        .HasMaxLength(150)
-                        .HasColumnType("varchar(150)");
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255)");
 
-                    b.Property<string>("ProductVersion")
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateOnly>("DateOfBirth")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("varchar(32)");
+                        .HasColumnType("longtext");
 
-                    b.HasKey("MigrationId")
-                        .HasName("PRIMARY");
+                    b.Property<string>("NormalizedEmail")
+                        .HasColumnType("longtext");
 
-                    b.ToTable("__efmigrationshistory", (string)null);
+                    b.Property<string>("NormalizedUserName")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Patronymic")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Surname")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AspNetUsers", (string)null);
                 });
 
             modelBuilder.Entity("LibWEB.Models.Author", b =>
@@ -158,47 +207,33 @@ namespace LibWEB.Migrations
                         .HasColumnType("int")
                         .HasColumnName("id");
 
-                    b.Property<DateOnly>("GivingDate")
-                        .HasColumnType("date")
+                    b.Property<DateTime?>("GivingDate")
+                        .HasColumnType("datetime(6)")
                         .HasColumnName("giving_date");
-
-                    b.Property<int>("Reader")
-                        .HasColumnType("int")
-                        .HasColumnName("reader");
-
-                    b.Property<DateOnly?>("ReceivingDate")
-                        .HasColumnType("date")
-                        .HasColumnName("receiving_date");
-
-                    b.Property<DateOnly>("ReceivingDeadlineDate")
-                        .HasColumnType("date")
-                        .HasColumnName("receiving_deadline_date");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex(new[] { "Reader" }, "reader");
-
-                    b.ToTable("giving", (string)null);
-                });
-
-            modelBuilder.Entity("LibWEB.Models.GivingPrintPublishing", b =>
-                {
-                    b.Property<int>("Giving")
-                        .HasColumnType("int")
-                        .HasColumnName("giving");
 
                     b.Property<int>("PrintPublishing")
                         .HasColumnType("int")
                         .HasColumnName("print_publishing");
 
-                    b.HasKey("Giving", "PrintPublishing");
+                    b.Property<int>("Reader")
+                        .HasColumnType("int")
+                        .HasColumnName("reader");
 
-                    b.HasIndex(new[] { "Giving" }, "giving");
+                    b.Property<DateTime?>("ReceivingDate")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("receiving_date");
 
-                    b.HasIndex(new[] { "PrintPublishing" }, "print_publishing")
-                        .HasDatabaseName("print_publishing2");
+                    b.Property<DateTime?>("ReceivingDeadlineDate")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("receiving_deadline_date");
 
-                    b.ToTable("giving_print_publishing", (string)null);
+                    b.HasKey("Id");
+
+                    b.HasIndex("PrintPublishing");
+
+                    b.HasIndex(new[] { "Reader" }, "reader");
+
+                    b.ToTable("giving", (string)null);
                 });
 
             modelBuilder.Entity("LibWEB.Models.Preorder", b =>
@@ -208,44 +243,31 @@ namespace LibWEB.Migrations
                         .HasColumnType("int")
                         .HasColumnName("id");
 
-                    b.Property<DateOnly?>("GivingDeadlineDate")
-                        .HasColumnType("date")
+                    b.Property<DateTime?>("GivingDeadlineDate")
+                        .HasColumnType("datetime(6)")
                         .HasColumnName("giving_deadline_date");
+
+                    b.Property<int>("PrintPublishing")
+                        .HasColumnType("int")
+                        .HasColumnName("print_publishing");
 
                     b.Property<int>("Reader")
                         .HasColumnType("int")
                         .HasColumnName("reader");
 
                     b.Property<string>("Status")
+                        .IsRequired()
                         .HasColumnType("enum('created','done','archived')")
                         .HasColumnName("status");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("PrintPublishing");
+
                     b.HasIndex(new[] { "Reader" }, "reader")
                         .HasDatabaseName("reader1");
 
                     b.ToTable("preorder", (string)null);
-                });
-
-            modelBuilder.Entity("LibWEB.Models.PreorderPrintPublishing", b =>
-                {
-                    b.Property<int>("Preorder")
-                        .HasColumnType("int")
-                        .HasColumnName("preorder");
-
-                    b.Property<int>("PrintPublishing")
-                        .HasColumnType("int")
-                        .HasColumnName("print_publishing");
-
-                    b.HasKey("Preorder", "PrintPublishing");
-
-                    b.HasIndex(new[] { "Preorder" }, "preorder");
-
-                    b.HasIndex(new[] { "PrintPublishing" }, "print_publishing")
-                        .HasDatabaseName("print_publishing3");
-
-                    b.ToTable("preorder_print_publishing", (string)null);
                 });
 
             modelBuilder.Entity("LibWEB.Models.PrintPublishing", b =>
@@ -327,6 +349,116 @@ namespace LibWEB.Migrations
                     b.ToTable("reader", (string)null);
                 });
 
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("NormalizedName")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AspNetRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("RoleId")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AspNetRoleClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AspNetUserClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("ProviderKey")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("LoginProvider", "ProviderKey", "UserId");
+
+                    b.ToTable("AspNetUserLogins", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("RoleId")
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.ToTable("AspNetUserRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("AspNetUserTokens", (string)null);
+                });
+
             modelBuilder.Entity("LibWEB.Models.Author", b =>
                 {
                     b.HasOne("LibWEB.Models.Country", "CountryNavigation")
@@ -379,62 +511,40 @@ namespace LibWEB.Migrations
 
             modelBuilder.Entity("LibWEB.Models.Giving", b =>
                 {
+                    b.HasOne("LibWEB.Models.PrintPublishing", "PrintPublishingNavigation")
+                        .WithMany()
+                        .HasForeignKey("PrintPublishing")
+                        .IsRequired()
+                        .HasConstraintName("fk_print_publishing");
+
                     b.HasOne("LibWEB.Models.Reader", "ReaderNavigation")
                         .WithMany("Givings")
                         .HasForeignKey("Reader")
                         .IsRequired()
                         .HasConstraintName("giving_ibfk_1");
 
-                    b.Navigation("ReaderNavigation");
-                });
-
-            modelBuilder.Entity("LibWEB.Models.GivingPrintPublishing", b =>
-                {
-                    b.HasOne("LibWEB.Models.Giving", "GivingNavigation")
-                        .WithMany()
-                        .HasForeignKey("Giving")
-                        .IsRequired()
-                        .HasConstraintName("giving_print_publishing_ibfk_1");
-
-                    b.HasOne("LibWEB.Models.PrintPublishing", "PrintPublishingNavigation")
-                        .WithMany()
-                        .HasForeignKey("PrintPublishing")
-                        .IsRequired()
-                        .HasConstraintName("giving_print_publishing_ibfk_2");
-
-                    b.Navigation("GivingNavigation");
-
                     b.Navigation("PrintPublishingNavigation");
+
+                    b.Navigation("ReaderNavigation");
                 });
 
             modelBuilder.Entity("LibWEB.Models.Preorder", b =>
                 {
+                    b.HasOne("LibWEB.Models.PrintPublishing", "PrintPublishingNavigation")
+                        .WithMany()
+                        .HasForeignKey("PrintPublishing")
+                        .IsRequired()
+                        .HasConstraintName("fk_print_publishing_1");
+
                     b.HasOne("LibWEB.Models.Reader", "ReaderNavigation")
                         .WithMany("Preorders")
                         .HasForeignKey("Reader")
                         .IsRequired()
                         .HasConstraintName("preorder_ibfk_1");
 
-                    b.Navigation("ReaderNavigation");
-                });
-
-            modelBuilder.Entity("LibWEB.Models.PreorderPrintPublishing", b =>
-                {
-                    b.HasOne("LibWEB.Models.Preorder", "PreorderNavigation")
-                        .WithMany()
-                        .HasForeignKey("Preorder")
-                        .IsRequired()
-                        .HasConstraintName("preorder_print_publishing_ibfk_1");
-
-                    b.HasOne("LibWEB.Models.PrintPublishing", "PrintPublishingNavigation")
-                        .WithMany()
-                        .HasForeignKey("PrintPublishing")
-                        .IsRequired()
-                        .HasConstraintName("preorder_print_publishing_ibfk_2");
-
-                    b.Navigation("PreorderNavigation");
-
                     b.Navigation("PrintPublishingNavigation");
+
+                    b.Navigation("ReaderNavigation");
                 });
 
             modelBuilder.Entity("LibWEB.Models.Country", b =>
