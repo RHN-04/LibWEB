@@ -1,0 +1,44 @@
+﻿@model LibWEB.ViewModel.UpdateGivingViewModel
+
+<h1>Изменение выдачи книги</h1>
+
+
+<form asp-action="Update" method="post">
+    <input type="hidden" asp-for="Id" />
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="form-group">
+        <label>Название книги</label>
+        <input class="form-control" readonly value="@Model.BookName" />
+    </div>
+    <input type="hidden" asp-for="BookId" />
+    <input type="hidden" asp-for="BookName" />
+
+    <div class="form-group">
+        <label asp-for="ReaderFullName"></label>
+        <input class="form-control" value="@Model.ReaderFullName" readonly />
+        <input type="hidden" asp-for="ReaderId" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="GivingDate"></label>
+        <input asp-for="GivingDate" class="form-control" type="date" readonly />
+        <input asp-for="GivingDate" type="hidden" />
+        <span asp-validation-for="GivingDate" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ReceivingDeadlineDate"></label>
+        <input asp-for="ReceivingDeadlineDate" class="form-control" type="date" />
+        <span asp-validation-for="ReceivingDeadlineDate" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ReceivingDate"></label>
+        <input asp-for="ReceivingDate" class="form-control" type="date" />
+        <span asp-validation-for="ReceivingDate" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Обновить выдачу</button>
+    </div>
+</form>

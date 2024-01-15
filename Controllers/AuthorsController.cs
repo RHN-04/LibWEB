@@ -1,13 +1,15 @@
 ﻿using LibWEB.Data;
 using LibWEB.Models;
 using LibWEB.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibWEB.Controllers
 {
-	public class AuthorsController : Controller
+    [Authorize(Roles = "библиотекарь")]
+    public class AuthorsController : Controller
 	{
 		private readonly ILogger<AuthorsController> _logger;
 		private readonly LibContext _context;

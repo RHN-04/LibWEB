@@ -1,6 +1,7 @@
 ﻿using LibWEB.Data;
 using LibWEB.Models;
 using LibWEB.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -70,6 +71,7 @@ namespace LibWEB.Controllers
             return View(booksViewModels);
         }
 
+        [Authorize(Roles = "библиотекарь")]
         [HttpGet]
         public IActionResult Create()
         {
@@ -79,6 +81,7 @@ namespace LibWEB.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "библиотекарь")]
         [HttpPost]
         public IActionResult Create(CreateBookViewModel model, IFormFile imageFile, string? newGenre)
         {
@@ -224,6 +227,7 @@ namespace LibWEB.Controllers
             return View(bookViewModel);
         }
 
+        [Authorize(Roles = "библиотекарь")]
         [HttpGet]
         public async Task<IActionResult> Update(int id)
         {
@@ -279,6 +283,7 @@ namespace LibWEB.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "библиотекарь")]
         [HttpPost]
         public async Task<IActionResult> Update(UpdateBookViewModel model, IFormFile imageFile, int id)
         {
@@ -393,6 +398,7 @@ namespace LibWEB.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = "библиотекарь")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)

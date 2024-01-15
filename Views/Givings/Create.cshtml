@@ -1,0 +1,38 @@
+﻿@model LibWEB.ViewModel.CreateGivingViewModel
+
+<h1>Выдача книги</h1>
+
+<div asp-validation-summary="All" class="text-danger"></div>
+<form asp-action="Create" method="post">
+<div class="form-group">
+    <label>Название книги</label>
+    <input class="form-control" readonly value="@Model.BookName" />
+</div>
+<input type="hidden" asp-for="BookId" value="@Model.BookId" />
+<input type="hidden" asp-for="BookName" />
+
+
+<div class="form-group">
+    <label asp-for="ReaderId"></label>
+    <select asp-for="ReaderId" asp-items="@Model.Readers" class="form-control"></select>
+    <span asp-validation-for="ReaderId" class="text-danger"></span>
+</div>
+
+
+    <div class="form-group">
+        <label asp-for="GivingDate"></label>
+        <input asp-for="GivingDate" class="form-control" type="date" />
+        <span asp-validation-for="GivingDate" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ReceivingDeadlineDate"></label>
+        <input asp-for="ReceivingDeadlineDate" class="form-control" type="date" />
+        <span asp-validation-for="ReceivingDeadlineDate" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Выдать книгу</button>
+    </div>
+</form>
+

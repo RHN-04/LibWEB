@@ -11,7 +11,13 @@
                     <div class="card-header text-white bg-info">
                         <p class="card-text">
                             <h5 class="card-title">
-                                @Model.Title
+                                @Model.Title (@Model.AgeRestriction+)
+                                @if (User.IsInRole("библиотекарь"))
+                                {
+                                    <a class="text-white float-right" asp-action="Update" asp-route-id="@Model.Id">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                }
                             </h5>
                         </p>
                     </div>
@@ -21,9 +27,6 @@
                 </div>
                 <div class="col-md-8">
                     <div class="card-body">
-                        <p class="card-text">
-                            <b>Название: </b> @Model.Title
-                        </p>
                         <p class="card-text">
                             <b>Автор(ы): </b>
                             @if (Model.SelectedAuthors != null && Model.SelectedAuthors.Any())
@@ -46,7 +49,7 @@
                         <p class="card-text"><b>В наличии: </b>@Model.Numbers</p>
                         <p class="card-text ">
                             <b>Доступность: </b>
-                            @if (Model.Numbers >= 0)
+                            @if (Model.Numbers > 0)
                             {
                                 <span class="badge bg-success text-white">В НАЛИЧИИ</span>
                             }
@@ -62,12 +65,6 @@
                         <p class="card-text">
                             <a class="btn btn-outline-primary float-right" asp-action="Index">
                                 Вернуться на главную
-                            </a>
-                            <a class="btn btn-success text-white"
-                               asp-controller="PreordersController"
-                               asp-action="PreorderBook"
-                               asp-route-id="@Model.Id">
-                                Отложить
                             </a>
                         </p>
                     </div>

@@ -1,0 +1,80 @@
+﻿@model IEnumerable<LibWEB.ViewModel.GivingViewModel>
+
+@{
+    ViewData["Title"] = "Список выдач";
+}
+
+<h1>Выдачи</h1>
+
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.BookTitle)</th>
+                    <th>@Html.DisplayNameFor(model => model.ReceivingDeadlineDate)</th>
+                    <th>@Html.DisplayNameFor(model => model.ReceivingDate)</th>
+                    @if (User.IsInRole("библиотекарь"))
+                    {
+                        <th>@Html.DisplayNameFor(model => model.ReaderFullName)</th>
+                    }
+                    <th>@Html.DisplayName("Статус")</th>
+                    @if (User.IsInRole("библиотекарь"))
+                    {
+                        <th>Действия</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="align-middle">
+                            @Html.DisplayFor(modelItem => item.BookTitle)
+                        </td>
+                        <td class="align-middle">
+                            @(item.ReceivingDeadlineDate.HasValue ? item.ReceivingDeadlineDate.Value.ToShortDateString() : "")
+                        </td>
+                        <td class="align-middle">
+                            @(item.ReceivingDate.HasValue ? item.ReceivingDate.Value.ToShortDateString() : "")
+                        </td>
+                        @if (User.IsInRole("библиотекарь"))
+                        {
+                            <td class="align-middle">
+                                @Html.DisplayFor(modelItem => item.ReaderFullName)
+                            </td>
+                        }
+                        <td class="align-middle">
+                            @if (item.ReceivingDate == null)
+                            {
+                                if (item.ReceivingDeadlineDate > DateTime.Now || item.ReceivingDeadlineDate == DateTime.Today)
+                                {
+                                    <span class="text-warning">Читается</span>
+                                }
+                                else if (item.ReceivingDeadlineDate < DateTime.Now || item.ReceivingDate > item.ReceivingDeadlineDate)
+                                {
+                                    <span class="text-danger">Просрочена</span>
+                                }
+                            }
+                            else
+                            {
+                                <span class="text-success">Сдана вовремя</span>
+                            }
+                        </td>
+                        @if (User.IsInRole("библиотекарь"))
+                        {
+                            <td class="align-middle">
+                                @if (item.ReceivingDate == null)
+                                {
+                                    <a asp-controller="Givings" asp-action="Update" asp-route-id="@item.Id" class="btn btn-outline-primary">
+                                        <i class="bi bi-pencil-square"></i> Редактировать
+                                    </a>
+                                }
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
