@@ -443,5 +443,75 @@ namespace LibWEB.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpGet]
+        public IActionResult Search(string title, int? authorId, int? genreId, int? ageRestriction)
+        {
+
+            var query = _context.PrintPublishings.AsQueryable();
+
+            if (!string.IsNullOrEmpty(title))
+            {
+                query = query.Where(b => b.Name.Contains(title));
+            }
+
+            if (authorId.HasValue)
+            {
+                query = query.Join(
+                _context.AuthorPrintPublishings,
+                pp => pp.Id,
+                app => app.PrintPublishing,
+                (pp, app) => new { PrintPublishing = pp, AuthorPrintPublishing = app }
+            )
+            .Where(j => j.AuthorPrintPublishing.Author == authorId)
+            .Select(j => j.PrintPublishing);
+            }
+
+            if (genreId.HasValue)
+            {
+                query = query.Join(
+                _context.GenrePrintPublishings,
+                pp => pp.Id,
+                app => app.PrintPublishing,
+                (pp, app) => new { PrintPublishing = pp, GenrePrintPublishing = app }
+            )
+            .Where(j => j.GenrePrintPublishing.Genre == genreId)
+            .Select(j => j.PrintPublishing);
+            }
+
+            if (ageRestriction.HasValue)
+            {
+                query = query.Where(b => b.AgeRestriction == ageRestriction);
+            }
+
+            var result = query.Select(b => new BookViewModel
+            {
+                Id = b.Id,
+                Title = b.Name,
+                AgeRestriction = b.AgeRestriction,
+                YearOfPublishing = b.YearOfPublishing,
+                Description = b.Description,
+                Numbers = b.Numbers,
+                ImageId = b.ImageId,
+                SelectedAuthors = _context.AuthorPrintPublishings
+                    .Where(app => app.PrintPublishing == b.Id)
+                    .Select(app => new AuthorViewModel
+                    {
+                        Id = app.AuthorNavigation != null ? app.AuthorNavigation.Id : 0,
+                        Name = app.AuthorNavigation != null ? app.AuthorNavigation.Name : "",
+                        Patronymic = app.AuthorNavigation != null ? app.AuthorNavigation.Patronymic : "",
+                        Surname = app.AuthorNavigation != null ? app.AuthorNavigation.Surname : ""
+                    })
+                    .ToList(),
+                SelectedGenres = _context.GenrePrintPublishings
+            .Where(gp => gp.PrintPublishing == b.Id)
+            .Select(gp => gp.GenreNavigation != null ? gp.GenreNavigation.NameGenre : "")
+            .ToList()
+        }).ToList();
+
+            return View("Index", result);
+        }
+
+
+
     }
 }

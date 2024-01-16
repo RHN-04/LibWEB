@@ -27,8 +27,27 @@ namespace LibWEB.Controllers
         public IActionResult Index()
         {
             var users = _userManager.Users.ToList();
-            return View(users);
+            var userDTOs = new List<EditUserViewModel>();
+
+            foreach (var user in users)
+            {
+                var roles = _userManager.GetRolesAsync(user).Result;
+
+                var userDTO = new EditUserViewModel
+                {
+                    Id = user.Id,
+                    Email = user.Email,
+                    Surname = user.Surname,
+                    Name = user.Name,
+                    SelectedRoles = roles.ToList()
+                };
+
+                userDTOs.Add(userDTO);
+            }
+
+            return View(userDTOs);
         }
+
 
         public async Task<IActionResult> Edit(string id)
         {
@@ -58,8 +77,10 @@ namespace LibWEB.Controllers
                 RoleOptions = roles.Select(r => new SelectListItem { Value = r.Name, Text = r.Name }).ToList()
             };
 
+
             return View(model);
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]

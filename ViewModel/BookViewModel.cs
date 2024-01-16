@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel.DataAnnotations;
 
 namespace LibWEB.ViewModel
 {
@@ -26,7 +27,9 @@ namespace LibWEB.ViewModel
 
                 return $"images/{ImageId}";
             }
-            public List<AuthorViewModel> SelectedAuthors { get; set; } = new List<AuthorViewModel>();
+            public List<AuthorViewModel> Authors { get; set; } = new List<AuthorViewModel>();
+        public List<string> Genres { get; set; } = new List<string>();
+        public List<AuthorViewModel> SelectedAuthors { get; set; } = new List<AuthorViewModel>();
             public List<string> SelectedGenres { get; set; } = new List<string>();
 
             public override bool Equals(object obj)
@@ -63,5 +66,19 @@ namespace LibWEB.ViewModel
                     return hashCode;
                 }
             }
+        public List<SelectListItem> AgeRestrictionOptions { get; } = new List<SelectListItem>
+    {
+        new SelectListItem { Value = "0", Text = "0+" },
+        new SelectListItem { Value = "6", Text = "6+" },
+        new SelectListItem { Value = "12", Text = "12+" },
+        new SelectListItem { Value = "16", Text = "16+" },
+        new SelectListItem { Value = "18", Text = "18+" }
+    };
+
+        public class BookViewModelList
+        {
+            public List<LibWEB.ViewModel.BookViewModel> Books { get; set; }
+            public BookViewModel SearchModel { get; set; }
+        }
     }
 }

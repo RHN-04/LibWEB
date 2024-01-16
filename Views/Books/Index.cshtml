@@ -3,6 +3,23 @@
     ViewData["Title"] = "Главная";
 }
 
+<form method="get" asp-action="Search" class="mb-4">
+    <div class="input-group">
+        <input type="text" name="title" class="form-control" placeholder="Введите название книги" />
+        <select name="ageRestriction" class="form-select">
+            <option value="">Выберите возрастное ограничение</option>
+            <option value="0">0+</option>
+            <option value="6">6+</option>
+            <option value="12">12+</option>
+            <option value="16">16+</option>
+            <option value="18">18+</option>
+        </select>
+        <button type="submit" class="btn btn-primary">Поиск</button>
+    </div>
+</form>
+
+
+
 @if (Model != null && Model.Any())
 {
     <div class="row">
@@ -27,7 +44,7 @@
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <img src="@book.GetImageUrl()" alt="@book.Title" height=300px/>
+                            <img src="@Url.Content($"~/images/{book.ImageId}")" alt="@book.Title" height=300px />
                         </div>
                         <div class="col-md-6">
                             <div class="card-body">

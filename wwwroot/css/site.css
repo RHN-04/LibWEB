@@ -16,3 +16,17 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.bold-white-text {
+    font-weight: bold;
+    color: white !important;
+    ;
+}
+
+.req {
+    color: red;
+}
+
+.bg-custom {
+    background-color: #0DCAF0;
+ }
